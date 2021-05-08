@@ -16,7 +16,7 @@ x-airflow-common:
         AIRFLOW__CORE__LOAD_EXAMPLES: "true"
         AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
     image: apache/airflow:latest
-    user: "50000:50000"
+    user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-50000}"
     volumes:
         - ./airflow/dags:/opt/airflow/dags
         - ./airflow/logs:/opt/airflow/logs
@@ -26,9 +26,9 @@ services:
     postgres:
         container_name: currency_scrapper_postgres
         environment:
-            POSTGRES_DB: airflow
-            POSTGRES_USER: airflow
-            POSTGRES_PASSWORD: airflow
+            POSTGRES_DB: ${POSTGRES_DB:-airflow}
+            POSTGRES_USER: ${POSTGRES_USER:-airflow}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-airflow}
         healthcheck:
             interval: 5s
             retries: 5
