@@ -13,9 +13,8 @@ x-airflow-common:
         AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
         AIRFLOW__CORE__EXECUTOR: CeleryExecutor
         AIRFLOW__CORE__FERNET_KEY: ""
-        AIRFLOW__CORE__LOAD_EXAMPLES: "true"
+        AIRFLOW__CORE__LOAD_EXAMPLES: "false"
         AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
-    image: apache/airflow:latest
     user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-50000}"
     volumes:
         - ./airflow/dags:/opt/airflow/dags
@@ -59,18 +58,23 @@ services:
             retries: 5
             test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
             timeout: 10s
+        image: apache/airflow:latest
         ports:
             - 8080:8080
         restart: always
 
     airflow-scheduler:
         <<: *airflow-common
+        build:
+            context: ./resources
         container_name: currency_scrapper_airflow_scheduler
         command: scheduler
         restart: always
 
     airflow-worker:
         <<: *airflow-common
+        build:
+            context: ./resources
         container_name: currency_scrapper_airflow_worker
         command: celery worker
         restart: always
@@ -85,11 +89,13 @@ services:
             _AIRFLOW_WWW_USER_CREATE: "true"
             _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
             _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
+        image: apache/airflow:latest
 
     flower:
         <<: *airflow-common
         container_name: currency_scrapper_flower
         command: celery flower
+        image: apache/airflow:latest
         healthcheck:
             interval: 10s
             retries: 5
