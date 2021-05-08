@@ -7,14 +7,14 @@ This project is currently a **work in progress**.
 
 ## Contents
 
-- [Building and Running](#Building-and-Running)
-- [Testing](#Testing)
-- [Structure](#Structure)
-- [Branching](#Branching)
-- [Versioning](#Versioning)
-  - [How to increment the version](#How-to-increment-the-version)
-- [Committing](#Committing)
-- [References](#References)
+- [Building and Running](#Building-and-Running-)
+- [Testing](#Testing-)
+- [Structure](#Structure-)
+- [Branching](#Branching-)
+- [Versioning](#Versioning-)
+  - [How to increment the version](#How-to-increment-the-version-)
+- [Committing](#Committing-)
+- [References](#References-)
 
 ## Building and Running [[^](#Contents)]
 
