@@ -5,28 +5,39 @@ currency information using Apache Airflow.
 
 This project is currently a **work in progress**.
 
-## Building and Running
+## Contents
+
+- [Building and Running](#Building-and-Running)
+- [Testing](#Testing)
+- [Structure](#Structure)
+- [Branching](#Branching)
+- [Versioning](#Versioning)
+  - [How to increment the version](#How-to-increment-the-version)
+- [Committing](#Committing)
+- [References](#References)
+
+## Building and Running [[^](#Contents)]
 
 TODO.
 
-## Testing
+## Testing [[^](#Contents)]
 
 TODO.
 
-## Structure
+## Structure [[^](#Contents)]
 
 TODO.
 
-## Branching
+## Branching [[^](#Contents)]
 
 TODO.
 
-## Versioning
+## Versioning [[^](#Contents)]
 
 The project uses the [bump2version](https://pypi.org/project/bump2version) in
 order to control the version numbers following the [semantic versioning 2.0.0](https://semver.org).
 
-### How to increment the version
+### How to increment the version [[^](#Contents)]
 
 **After commit a modification** (because the repository must be clean), you
 must update the version according to the following rules:
@@ -129,11 +140,11 @@ flake8...................................................................Passed
 
 Then you can go ahead and commit again to send the updated versioning files.
 
-## Committing
+## Committing [[^](#Contents)]
 
 TODO.
 
-## References
+## References [[^](#Contents)]
 
 - [The Twelve-Factor App](https://12factor.net)
 - [Running Airflow in Docker](https://airflow.apache.org/docs/apache-airflow/stable/start/docker.html)
