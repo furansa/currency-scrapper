@@ -1,0 +1,35 @@
+repos:
+-   repo: local
+    hooks:
+    -   id: run-local-tests
+        name: Run all tests before commit
+        entry: ./resources/run_tests.sh
+        types: [text]
+        exclude: ".md$|.yaml$|.yml$"
+        language: "script"
+
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0
+    hooks:
+    -   id: check-added-large-files
+    -   id: check-case-conflict
+    -   id: check-docstring-first
+    -   id: check-executables-have-shebangs
+    -   id: check-merge-conflict
+    -   id: check-yaml
+    -   id: detect-private-key
+    -   id: end-of-file-fixer
+    -   id: name-tests-test
+    -   id: trailing-whitespace
+
+-   repo: https://github.com/psf/black
+    rev: 21.5b0
+    hooks:
+    -   id: black
+        args: [--line-length=80, --safe]
+        language_version: python3
+
+-   repo: https://gitlab.com/pycqa/flake8
+    rev: 3.9.1
+    hooks:
+    -   id: flake8

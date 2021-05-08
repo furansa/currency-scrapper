@@ -1,0 +1,106 @@
+version: "3.7"
+
+x-airflow-common:
+    &airflow-common
+    depends_on:
+        - postgres
+        - redis
+    environment:
+        &airflow-common-env
+        AIRFLOW__API__AUTH_BACKEND: "airflow.api.auth.backend.basic_auth"
+        AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+        AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
+        AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+        AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+        AIRFLOW__CORE__FERNET_KEY: ""
+        AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+        AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-50000}"
+    volumes:
+        - ./airflow/dags:/opt/airflow/dags
+        - ./airflow/logs:/opt/airflow/logs
+        - ./airflow/plugins:/opt/airflow/plugins
+
+services:
+    postgres:
+        container_name: currency_scrapper_postgres
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB:-airflow}
+            POSTGRES_USER: ${POSTGRES_USER:-airflow}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-airflow}
+        healthcheck:
+            interval: 5s
+            retries: 5
+            test: ["CMD", "pg_isready", "-U", "airflow"]
+        image: postgres:alpine
+        restart: always
+        volumes:
+            - ./postgresql/data:/var/lib/postgresql/data
+
+    redis:
+        container_name: currency_scrapper_redis
+        healthcheck:
+            interval: 5s
+            retries: 50
+            test: ["CMD", "redis-cli", "ping"]
+            timeout: 30s
+        image: redis:latest
+        ports:
+            - 6379:6379
+        restart: always
+
+    airflow-webserver:
+        <<: *airflow-common
+        container_name: currency_scrapper_airflow_webserver
+        command: webserver
+        healthcheck:
+            interval: 10s
+            retries: 5
+            test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+            timeout: 10s
+        image: apache/airflow:latest
+        ports:
+            - 8080:8080
+        restart: always
+
+    airflow-scheduler:
+        <<: *airflow-common
+        build:
+            context: ./resources
+        container_name: currency_scrapper_airflow_scheduler
+        command: scheduler
+        restart: always
+
+    airflow-worker:
+        <<: *airflow-common
+        build:
+            context: ./resources
+        container_name: currency_scrapper_airflow_worker
+        command: celery worker
+        restart: always
+
+    airflow-init:
+        <<: *airflow-common
+        container_name: currency_scrapper_airflow_init
+        command: version
+        environment:
+            <<: *airflow-common-env
+            _AIRFLOW_DB_UPGRADE: "true"
+            _AIRFLOW_WWW_USER_CREATE: "true"
+            _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
+            _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
+        image: apache/airflow:latest
+
+    flower:
+        <<: *airflow-common
+        container_name: currency_scrapper_flower
+        command: celery flower
+        image: apache/airflow:latest
+        healthcheck:
+            interval: 10s
+            retries: 5
+            test: ["CMD", "curl", "--fail", "http://localhost:5555/"]
+            timeout: 10s
+        ports:
+            - 5555:5555
+        restart: always

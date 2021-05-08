@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+apache-airflow = "*"
+pandas = "*"
+
+[dev-packages]
+black = "==20.8b1"
+bump2version = "*"
+flake8 = "*"
+pre-commit = "*"
+pyflakes = "*"
+pylint = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-html = "*"
+robotframework = "*"
+
+[requires]
+python_version = "3.9"
