@@ -5,7 +5,10 @@ name = "pypi"
 
 [packages]
 apache-airflow = "*"
+bs4 = "*"
+lxml = "*"
 pandas = "*"
+pyarrow = "*"
 
 [dev-packages]
 black = "==20.8b1"

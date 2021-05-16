@@ -13,7 +13,7 @@ set -e
 
 # Runs unit tests, disable reports generation for now
 # python3 -m pytest --cov=. --html=./tests/unit/report.html -v
-# python3 -m pytest -v
+cd app && python3 -m pytest -v tests/unit/
 
 # Generate HTML coverage test report, disabled for now, needs better configuration
 # coverage run -m pytest tests/*/*_test.py
